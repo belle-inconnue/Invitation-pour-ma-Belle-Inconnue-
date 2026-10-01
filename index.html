@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b1a">
+<title>Une invitation pour Belle Inconnue</title>
+<style>
+:root{--n:#070b1a;--b:#0e1a3a;--iv:#f5efe0;--or:#d4af6a;--mut:#a9b0c8}
+*{box-sizing:border-box;margin:0;min-width:0}
+html,body{height:100%}
+body{background:var(--n);-webkit-text-size-adjust:100%;touch-action:manipulation;color:var(--iv);font-family:Georgia,"Times New Roman",serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;top:0;right:0;bottom:0;left:0;z-index:-1;background:radial-gradient(ellipse at 50% 0,var(--b),var(--n) 70%)}
+canvas{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.bar{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 0;z-index:5}
+.ic{width:44px;height:44px;border-radius:50%;border:1px solid #d4af6a55;background:#0a1230aa;color:var(--or);font-size:18px;cursor:pointer}
+.ic[hidden]{visibility:hidden;display:block}
+main{position:relative;z-index:2;min-height:100vh;min-height:100dvh;display:flex}
+.step{display:none;width:100%;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;padding:72px 20px calc(40px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto}
+.step.on{display:flex;animation:in .9s ease both}
+@keyframes in{from{opacity:0;filter:blur(6px)}to{opacity:1;filter:none}}
+.l{opacity:0;transform:translateY(10px);transition:opacity 1s,transform 1s;pointer-events:none}
+.l.v{opacity:1;transform:none;pointer-events:auto}
+.hid{display:none!important}
+.pop{animation:in .8s ease both}
+p{font-size:clamp(1.05rem,4.6vw,1.35rem);line-height:1.6}
+h1,h2{font-weight:400;letter-spacing:.14em;color:var(--or);font-size:clamp(1rem,5vw,1.4rem);text-transform:uppercase}
+.big{font-size:clamp(1.5rem,8vw,2.3rem);font-style:italic}
+.gold{color:var(--or)}
+.btn{min-height:48px;padding:12px 26px;border-radius:30px;border:1px solid var(--or);background:linear-gradient(#d4af6a22,#d4af6a0a);color:var(--iv);font:inherit;font-size:1.05rem;cursor:pointer;max-width:100%;transition:background .3s,box-shadow .3s}
+.btn:hover,.btn:focus-visible{background:#d4af6a33;box-shadow:0 0 18px #d4af6a55;outline:none}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.btn.fill{background:var(--or);color:var(--n);font-weight:700}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.card{width:100%;padding:22px 18px;border:1px solid #d4af6a66;border-radius:14px;background:#0c1633cc;box-shadow:0 0 30px #d4af6a1a}
+.card b{display:block;color:var(--or);letter-spacing:.12em;font-weight:400;margin-bottom:8px}
+.sm{font-size:.95rem;color:var(--mut)}
+.env{position:relative;width:min(260px,76vw);height:calc(min(260px,76vw)*2/3);margin:10px 0}
+.env .bd{position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(145deg,#f5efe0,#e3d8bd);border-radius:6px;box-shadow:0 12px 40px #000a,0 0 40px #d4af6a33}
+.env .fl{position:absolute;left:0;right:0;top:0;height:60%;background:#e9dfc4;-webkit-clip-path:polygon(0 0,100% 0,50% 100%);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform 1.1s ease;z-index:3}
+.env .ft{position:absolute;top:0;right:0;bottom:0;left:0;background:#efe5ca;-webkit-clip-path:polygon(0 100%,50% 40%,100% 100%,100% 0,0 0,0 0);clip-path:polygon(0 100%,50% 40%,100% 100%,100% 0,0 0,0 0);z-index:2;opacity:0}
+.env .lt{position:absolute;left:8%;right:8%;top:8%;height:80%;background:#fffaf0;border-radius:4px;z-index:1;transition:transform 1.2s ease .5s;display:flex;align-items:center;justify-content:center;color:#7a6330;font-style:italic}
+.env .sl{position:absolute;left:50%;top:52%;width:34px;height:34px;margin:-17px;border-radius:50%;background:radial-gradient(#e6c47e,#a87f2e);z-index:4;transition:opacity .5s}
+.env.open .fl{transform:rotateX(180deg);z-index:0}
+.env.open .lt{transform:translateY(-45%)}
+.env.open .sl{opacity:0}
+.env.open .bd{z-index:1}
+.env .lt{z-index:1}
+.env .bd{z-index:1}
+.env .bd2{position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;background:linear-gradient(145deg,#f5efe0,#e6dcc0);-webkit-clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);border-radius:6px}
+.env.open .bd2{z-index:2}
+.cal{width:100%}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;text-transform:capitalize}
+.ch button{width:44px;height:44px;border-radius:50%;border:1px solid #d4af6a55;background:none;color:var(--or);font-size:1.2rem;cursor:pointer}
+.ch button:disabled{opacity:.25;cursor:default}
+.g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.g span{font-size:.7rem;color:var(--mut)}
+.g button{height:40px;min-height:38px;border-radius:50%;border:1px solid transparent;background:none;color:var(--iv);font:inherit;font-size:.95rem;cursor:pointer}
+.g button:disabled{color:#ffffff30;cursor:not-allowed}
+.g button:not(:disabled):hover{border-color:var(--or)}
+.g button.sel{background:var(--or);color:var(--n);font-weight:700;box-shadow:0 0 16px var(--or)}
+.chip{min-height:48px;padding:10px 14px;border-radius:24px;border:1px solid #d4af6a66;background:#0c1633aa;color:var(--iv);font:inherit;font-size:1rem;cursor:pointer}
+.chip.sel{background:var(--or);color:var(--n)}
+.own{width:100%;min-height:54px;font-size:1.1rem}
+input[type=text],input[type=time]{width:100%;min-height:50px;padding:10px 16px;border-radius:12px;border:1px solid var(--or);background:#0a1230;color:var(--iv);font:inherit;font-size:1.1rem;text-align:center;color-scheme:dark}
+.ltr{text-align:left;font-style:italic;line-height:1.7;padding:24px 20px;background:linear-gradient(#f5efe0,#eadfc2);color:#2a2418;border-radius:6px;box-shadow:0 10px 40px #000a;width:100%;font-size:clamp(.95rem,4.2vw,1.1rem)}
+.ltr p{font-size:inherit;margin-bottom:.8em;line-height:inherit}
+.sum{user-select:all;-webkit-user-select:all;white-space:pre-wrap;text-align:left;font-size:1rem;line-height:1.7;width:100%}
+.cs{display:flex;gap:26px;justify-content:center;margin:4px 0}
+.st{background:none;border:0;width:48px;height:48px;color:var(--or);font-size:26px;cursor:pointer;transition:text-shadow .5s,transform .5s}
+.st.on{text-shadow:0 0 18px var(--or),0 0 30px var(--or);transform:scale(1.25)}
+.ghost{background:none;border:0;color:var(--mut);font:inherit;text-decoration:underline;min-height:44px;cursor:pointer}
+.cake{width:150px;height:150px}
+.flame{transition:opacity .8s;transform-origin:center;animation:fl 1.2s ease-in-out infinite alternate}
+.flame.out{opacity:0;animation:none}
+@keyframes fl{to{transform:scale(1.15,.9)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.l{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="bar">
+  <button class="ic" id="back" hidden aria-label="Étape précédente">‹</button>
+  <div style="display:flex;gap:8px">
+    <button class="ic" id="mus" aria-label="Couper ou remettre la musique" title="Musique">♪</button>
+    <button class="ic" id="rst" aria-label="Recommencer" title="Recommencer">↺</button>
+  </div>
+</div>
+<main>
+
+<section class="step" id="s0">
+  <p class="l" data-d="400">Une lettre ?<br>Un secret ?<br>Une invitation ?</p>
+  <div class="env l" id="env" data-d="900" aria-hidden="true"><div class="bd"></div><div class="lt">pour toi</div><div class="bd2"></div><div class="fl"></div><div class="sl"></div></div>
+  <p class="l gold" data-d="800">À toi de le découvrir.</p>
+  <button class="btn fill l" id="open" data-d="600">Ouvrir</button>
+</section>
+
+<section class="step" id="s1">
+  <p class="l big" data-d="300">Belle Inconnue,</p>
+  <p class="l" data-d="1400">j'aurais pu simplement t'envoyer un message.</p>
+  <p class="l" data-d="1800">Mais franchement…</p>
+  <p class="l" data-d="2200">ce serait beaucoup trop simple.</p>
+  <p class="l gold" data-d="2600">Alors j'ai décidé de te préparer quelque chose.</p>
+  <div class="l" data-d="1200"><p class="sm">Facultatif : touche les étoiles.</p>
+    <div class="cs"><button class="st" data-t="Tu es arrivée jusqu'ici." aria-label="Étoile">✦</button><button class="st" data-t="Rien ne presse." aria-label="Étoile">✦</button><button class="st" data-t="Les plus belles histoires commencent par une curiosité." aria-label="Étoile">✦</button></div>
+    <p class="sm gold" id="cst" style="min-height:3em" aria-live="polite"></p></div>
+  <button class="btn fill l" data-next="2" data-d="800">Je suis curieuse…</button>
+</section>
+
+<section class="step" id="s2">
+  <p class="l" data-d="400">Avant d'aller plus loin,<br>j'ai besoin de savoir quelque chose.</p>
+  <p class="l big" data-d="1500">Es-tu prête à prendre une décision importante ?</p>
+  <div class="row l" id="g1" data-d="1000"><button class="btn" data-a="Oui">Oui</button><button class="btn" data-a="Je ne sais pas…">Je ne sais pas…</button></div>
+  <div class="hid" id="g2"><p class="gold" id="g2t"></p><br><button class="btn fill" data-next="3">Bon… continuons.</button></div>
+  <div class="l" data-d="1500"><button class="ghost" id="sec">✉ Une enveloppe secrète</button><p class="gold hid" id="sect">Tu pensais vraiment que j'allais faire tout ça sans être un peu romantique ?</p></div>
+</section>
+
+<section class="step" id="s3">
+  <p class="l" data-d="500">J'ai une proposition à te faire.</p>
+  <p class="l big" data-d="2000">Je voudrais t'inviter à sortir avec moi.</p>
+  <p class="l" data-d="2200">Un vrai rendez-vous.<br>Pas une réunion.<br>Pas une mission.<br>Pas un « on verra ».<br><span class="gold">Un DATE.</span></p>
+  <p class="l big gold" data-d="2400">À partir du 20 novembre 2026.</p>
+  <p class="l" data-d="2000">Mais il y a quelque chose que je ne veux pas décider à ta place.</p>
+  <button class="btn fill l" data-next="4" data-d="800">Découvrir les règles</button>
+</section>
+
+<section class="step" id="s4">
+  <div class="card l" data-d="500"><b>TU CHOISIS LA DATE</b><p>À partir du 20 novembre 2026,<br>choisis le jour qui te convient.</p></div>
+  <div class="card l" data-d="1400"><b>TU CHOISIS LE LIEU</b><p>Café ? Restaurant ? Promenade ? Plage ?<br>Un endroit que tu aimes ?<br>Ou un endroit que tu rêves de découvrir ?<br><span class="gold">C'est toi qui décides.</span></p></div>
+  <div class="card l" data-d="1400"><b>TU CHOISIS L'HEURE</b><p>Après-midi ? Fin d'après-midi ? Soirée ?<br>L'heure est entre tes mains.</p></div>
+  <p class="l big" data-d="1400">En résumé :<br><span class="gold">Je t'invite. Tu choisis.</span></p>
+  <button class="btn fill l" data-next="5" data-d="700">Choisir la date</button>
+  <div class="l" data-d="500"><button class="ghost" id="nc">Ne clique surtout pas ici.</button><p class="gold hid" id="nct">Évidemment que tu allais cliquer.<br>Je commence à te connaître.</p></div>
+</section>
+
+<section class="step" id="s5">
+  <h2 class="l" data-d="300">Choisis la date</h2>
+  <div class="cal card l" data-d="500">
+    <div class="ch"><button id="pm" aria-label="Mois précédent">‹</button><span id="mt"></span><button id="nm" aria-label="Mois suivant">›</button></div>
+    <div class="g" id="wd"></div><div class="g" id="cg" role="grid"></div>
+  </div>
+  <div class="hid" id="da"><p class="big">Le <span class="gold" id="dv"></span>…<br>Intéressant.</p><p>Mais ce n'est pas encore terminé.</p><br><button class="btn fill" data-next="6">Choisir le lieu</button></div>
+</section>
+
+<section class="step" id="s6">
+  <h2 class="l" data-d="300">Choisis le lieu</h2>
+  <p class="l sm" data-d="400">Suggestions facultatives — le choix t'appartient.</p>
+  <div class="row l" id="chips" data-d="500">
+    <button class="chip" data-p="Un café">☕ Un café</button><button class="chip" data-p="Un restaurant">🍽️ Un restaurant</button><button class="chip" data-p="Un endroit au bord de l'eau">🌊 Au bord de l'eau</button><button class="chip" data-p="Une promenade">🌳 Une promenade</button><button class="chip" data-p="Un cinéma">🎬 Un cinéma</button><button class="chip" data-p="Un lieu culturel">🎨 Un lieu culturel</button><button class="chip" data-own="1">✨ Un endroit que TU choisis</button>
+  </div>
+  <button class="btn own l" id="ownb" data-d="400">J'ai mon propre endroit en tête</button>
+  <div class="hid" id="ownw" style="width:100%"><p>Alors, où veux-tu m'emmener ?</p><br><input type="text" id="oin" placeholder="Écris le lieu ici…" maxlength="120" aria-label="Lieu du rendez-vous"></div>
+  <button class="btn fill l" id="pnext" data-next="7" data-d="300" disabled>Choisir l'heure</button>
+</section>
+
+<section class="step" id="s7">
+  <p class="l big" data-d="300">Et maintenant…<br>À quelle heure dois-je être prêt ?</p>
+  <svg class="l" data-d="500" width="170" height="170" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="92" fill="#0a1230" stroke="#d4af6a" stroke-width="1.5"/><g id="tk" stroke="#d4af6a"></g><line id="hh" x1="100" y1="100" x2="100" y2="55" stroke="#f5efe0" stroke-width="4" stroke-linecap="round"/><line id="mh" x1="100" y1="100" x2="100" y2="30" stroke="#d4af6a" stroke-width="2.5" stroke-linecap="round"/><circle cx="100" cy="100" r="5" fill="#d4af6a"/></svg>
+  <div class="l" data-d="400" style="width:100%"><input type="time" id="tin" aria-label="Heure du rendez-vous"></div>
+  <div class="hid" id="ta"><p class="big gold">Parfait.<br>Je note.</p><br><button class="btn fill" data-next="8">Voir notre rendez-vous</button></div>
+</section>
+
+<section class="step" id="s8">
+  <div class="card l" data-d="400"><h1 style="margin-bottom:14px">NOTRE RENDEZ-VOUS</h1>
+    <p class="sm">DATE</p><p class="gold" id="rd"></p><br><p class="sm">LIEU</p><p class="gold" id="rl"></p><br><p class="sm">HEURE</p><p class="gold" id="rh"></p></div>
+  <p class="l" data-d="1400">Tu viens donc officiellement de choisir notre rendez-vous.</p>
+  <p class="l" data-d="1800">Et maintenant que tu as choisi la date, le lieu et l'heure…<br>je n'ai plus qu'une seule chose à faire :</p>
+  <p class="l big gold" data-d="2000">être là.</p>
+  <button class="btn fill l" data-next="9" data-d="1200">Continuer</button>
+</section>
+
+<section class="step" id="s9">
+  <p class="l big" data-d="400">Attends…<br>Il reste une dernière question.</p>
+  <button class="btn l" id="qq" data-d="1200">Quelle question ?</button>
+  <div class="hid" id="q1"><p class="big">Est-ce que tu confirmes que tu acceptes cette invitation ?</p><br>
+    <div class="row"><button class="btn fill" id="yes">Oui ♥</button><button class="btn" id="think">Laisse-moi réfléchir</button></div></div>
+  <div class="hid" id="q2"><p>C'est totalement autorisé.</p><p class="gold">Je vais donc officiellement faire semblant d'être très patient.</p><br><p>Quand tu seras prête, tu pourras revenir ici.</p><br><button class="btn fill" id="yes2">Je veux finalement accepter</button></div>
+  <div class="hid" id="q3"><p class="big">Alors c'est officiel.</p><p class="big gold">Rendez-vous pris.</p><br><button class="btn fill" data-next="10">Lire ma lettre</button></div>
+</section>
+
+<section class="step" id="s10">
+  <div class="ltr l" data-d="400">
+    <p>Belle Inconnue,</p>
+    <p>je ne voulais pas simplement te demander : « Tu veux sortir avec moi ? »</p>
+    <p>Je voulais te laisser quelque chose de plus joli.</p>
+    <p>Une petite expérience. Quelques sourires. Quelques secondes de curiosité. Et surtout… la liberté de choisir.</p>
+    <p>Parce qu'un rendez-vous ne devrait pas ressembler à une convocation.</p>
+    <p>Je voulais que tu choisisses le jour, l'endroit, l'heure.</p>
+    <p>Moi, je n'avais qu'une seule décision à prendre : te proposer de partager un moment avec moi.</p>
+    <p>Et maintenant… c'est à toi de voir ce que tu veux faire de cette invitation.</p>
+    <p style="text-align:right">— Junior</p></div>
+  <button class="btn fill l" data-next="11" data-d="2500">Continuer</button>
+</section>
+
+<section class="step" id="s11">
+  <p class="l" data-d="500">Et puis… j'allais oublier le plus important.</p>
+  <svg class="cake l" data-d="900" viewBox="0 0 150 150" aria-hidden="true"><rect x="25" y="85" width="100" height="45" rx="6" fill="#f5efe0"/><path d="M25 100q12 12 25 0t25 0 25 0 25 0" fill="none" stroke="#d4af6a" stroke-width="3"/><rect x="71" y="55" width="8" height="30" fill="#d4af6a"/><path id="fl" class="flame" d="M75 32q-10 14 0 22 10-8 0-22z" fill="#ffd27a"/></svg>
+  <p class="l big gold" data-d="1000">Joyeux anniversaire,</p>
+  <p class="l big" data-d="800">Belle Inconnue.</p>
+  <div class="row l" data-d="1000"><button class="btn" id="blow">Souffler la bougie</button><button class="btn" id="replay">♪ Rejouer la mélodie</button></div>
+  <p class="gold hid" id="wish">Fais un vœu. Je te laisse le garder pour toi.</p>
+  <button class="btn fill l" data-next="12" data-d="600">Continuer</button>
+</section>
+
+<section class="step" id="s12">
+  <p class="l" data-d="500">Certaines invitations demandent :<br>« Veux-tu venir ? »</p>
+  <p class="l big" data-d="2200">La mienne demande :<br>« Quand, où et à quelle heure ? »</p>
+  <p class="l gold big" data-d="2600">Je t'attendrai là où tu auras choisi.</p>
+  <p class="l" data-d="2000">Pour Belle Inconnue. ♥</p>
+  <button class="btn fill l" id="save" data-d="1200">ENREGISTRER MON CHOIX</button>
+</section>
+
+<section class="step" id="s13">
+  <div class="card"><h1 style="margin-bottom:14px">INVITATION ACCEPTÉE</h1><div class="sum" id="sum" tabindex="0"></div></div>
+  <p class="sm">Envoie-moi ton choix directement :</p>
+  <div class="row"><a class="btn fill" id="wa" href="#" target="_blank" rel="noopener">Envoyer par WhatsApp</a><a class="btn fill" id="em" href="#">Envoyer par e-mail</a></div>
+  <div class="row"><button class="btn" id="copy">Copier le résumé</button><button class="btn" id="again">Recommencer</button></div>
+  <p class="sm" id="cmsg" aria-live="polite"></p>
+</section>
+
+</main>
+<script>
+(function(){
+"use strict";
+var RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+var $=function(s,r){return(r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var MIN=new Date(2026,10,20);
+var S={date:null,place:"",time:""};
+var cur=null,hist=[],tok=0,viewY=2026,viewM=10,ownMode=false;
+
+/* ---------- Fond étoilé + particules ---------- */
+var cv=$("#bg"),cx=cv.getContext("2d"),stars=[],parts=[],W=0,H=0;
+function size(){var d=window.devicePixelRatio||1;W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);stars=[];for(var i=0;i<90;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.3,p:Math.random()*6})}
+function draw(t){cx.clearRect(0,0,W,H);
+ stars.forEach(function(s){var a=RM?.6:.35+.45*Math.sin(t/900+s.p);cx.fillStyle="rgba(245,239,224,"+a+")";cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.3);cx.fill()});
+ parts=parts.filter(function(p){return p.l>0});
+ parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.03;p.l-=.012;cx.fillStyle="rgba(212,175,106,"+Math.max(p.l,0)+")";cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.3);cx.fill()});
+ if(!RM||parts.length)requestAnimationFrame(draw)}
+function burst(x,y){var n=RM?10:44;for(var i=0;i<n;i++){var a=Math.random()*6.3,v=Math.random()*3+1;parts.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,r:Math.random()*2+.8,l:1})}
+ if(RM)requestAnimationFrame(draw)}
+function burstEl(el){var r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2)}
+size();addEventListener("resize",function(){size();if(RM)requestAnimationFrame(draw)});requestAnimationFrame(draw);
+
+/* ---------- Musique (Web Audio, sans fichier) ---------- */
+var ac=null,master=null,muted=false,amb=null;
+function hz(m){return 440*Math.pow(2,(m-69)/12)}
+function initAudio(){if(ac)return;try{var C=window.AudioContext||window.webkitAudioContext;ac=new C();master=ac.createGain();master.gain.value=.16;master.connect(ac.destination);chord(0);var i=1;amb=setInterval(function(){chord(i++)},4000)}catch(e){ac=null}}
+function tone(m,t,d,type,vol,att){var o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=hz(m);g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+att);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.1)}
+var CH=[[57,60,64],[53,57,60],[48,52,55],[55,59,62]],PE=[69,72,74,76,79,81];
+function chord(i){if(!ac||ac.state==="closed")return;var t=ac.currentTime+.05,c=CH[i%4];
+ c.forEach(function(m){tone(m,t,5,"sine",.35,1.4);tone(m+12,t,4.5,"triangle",.08,1.6)});
+ for(var k=0;k<3;k++)tone(PE[Math.floor(Math.random()*PE.length)],t+.8+k*1.1+Math.random()*.4,2.6,"triangle",.22,.02)}
+function bday(){if(!ac||muted)return;if(ac.state==="suspended")ac.resume();
+ var N=[[67,.75],[67,.25],[69,1],[67,1],[72,1],[71,2],[67,.75],[67,.25],[69,1],[67,1],[74,1],[72,2],[67,.75],[67,.25],[79,1],[76,1],[72,1],[71,1],[69,1],[77,.75],[77,.25],[76,1],[72,1],[74,1],[72,2]],t=ac.currentTime+.3,b=.55;
+ N.forEach(function(n){tone(n[0],t,n[1]*b+.9,"triangle",.5,.02);tone(n[0]-12,t,n[1]*b+.9,"sine",.2,.02);t+=n[1]*b})}
+$("#mus").addEventListener("click",function(){initAudio();if(!ac)return;muted=!muted;master.gain.setTargetAtTime(muted?0:.16,ac.currentTime,.2);this.style.opacity=muted?.45:1;this.setAttribute("aria-pressed",String(muted))});
+
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&ac&&ac.state!=="running"&&ac.state!=="closed"){try{ac.resume()}catch(e){}}});
+
+/* ---------- Étapes ---------- */
+var steps=$$(".step");
+function reveal(sec){var ls=$$(".l",sec),t=0;ls.forEach(function(e){e.classList.remove("v")});var my=tok;
+ ls.forEach(function(e){t+=RM?0:(+e.dataset.d||800);setTimeout(function(){if(my===tok)e.classList.add("v")},t)});
+ if(RM)ls.forEach(function(e){e.classList.add("v")})}
+function go(n,push){if(push!==false&&cur!==null)hist.push(cur);cur=n;tok++;
+ steps.forEach(function(s,i){s.classList.toggle("on",i===n)});
+ $("#back").hidden=!(hist.length&&n>0&&n<13);
+ scrollTo(0,0);if(ENTER[n])ENTER[n]();reveal(steps[n])}
+function fmtDate(d){var s=d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});return s.charAt(0).toUpperCase()+s.slice(1)}
+function fmtTime(t){if(!t)return"";var p=t.split(":");return parseInt(p[0],10)+" h"+(p[1]==="00"?"":" "+p[1])}
+function showEl(e){e.classList.remove("hid");e.classList.add("pop")}
+
+var ENTER={
+0:function(){$("#env").classList.remove("open")},
+5:function(){drawCal();if(S.date){$("#dv").textContent=fmtDate(S.date);showEl($("#da"))}else $("#da").classList.add("hid")},
+6:function(){syncPlace()},
+7:function(){var t=$("#tin");t.value=S.time;clock(S.time);$("#ta").classList.toggle("hid",!S.time)},
+8:function(){$("#rd").textContent=S.date?fmtDate(S.date):"—";$("#rl").textContent=S.place||"—";$("#rh").textContent=fmtTime(S.time)||"—"},
+11:function(){$("#fl").classList.remove("out");$("#wish").classList.add("hid");setTimeout(bday,1200)},
+13:function(){$("#sum").textContent=summary();$("#cmsg").textContent="";
+ var msg="INVITATION ACCEPTÉE\n\n"+summary();
+ $("#wa").href="https://wa.me/50937371074?text="+encodeURIComponent(msg);
+ $("#em").href="mailto:junior.snerge.rezil06@gmail.com?subject="+encodeURIComponent("Invitation acceptée — Belle Inconnue")+"&body="+encodeURIComponent(msg);
+ setTimeout(function(){burst(W*.5,H*.3)},300)}
+};
+function summary(){return"Date :\n"+(S.date?fmtDate(S.date):"—")+"\n\nLieu :\n"+(S.place||"—")+"\n\nHeure :\n"+(fmtTime(S.time)||"—")+"\n\nBelle Inconnue a choisi son rendez-vous."}
+
+document.addEventListener("click",function(e){var b=e.target.closest("[data-next]");if(b)go(+b.dataset.next)});
+$("#back").addEventListener("click",function(){if(hist.length)go(hist.pop(),false)});
+function restart(){S={date:null,place:"",time:""};hist=[];cur=null;viewY=2026;viewM=10;ownMode=false;
+ $("#oin").value="";$("#g1").classList.remove("hid");$("#g2").classList.add("hid");$("#cst").textContent="";
+ $$(".st").forEach(function(s){s.classList.remove("on")});$("#sect").classList.add("hid");$("#nct").classList.add("hid");
+ ["#q1","#q2","#q3"].forEach(function(q){$(q).classList.add("hid")});$("#qq").classList.remove("hid");go(0)}
+$("#rst").addEventListener("click",restart);$("#again").addEventListener("click",restart);
+
+/* Écran 0 */
+$("#open").addEventListener("click",function(){initAudio();if(ac&&ac.state==="suspended")ac.resume();$("#env").classList.add("open");this.disabled=true;burstEl($("#env"));setTimeout(function(){$("#open").disabled=false;go(1)},RM?200:2000)});
+/* Constellation */
+$$(".st").forEach(function(s){s.addEventListener("click",function(){s.classList.add("on");$("#cst").textContent=s.dataset.t;burstEl(s)})});
+/* Mini-jeu */
+$$("#g1 button").forEach(function(b){b.addEventListener("click",function(){$("#g1").classList.add("hid");$("#g2t").innerHTML=b.dataset.a==="Oui"?"J'aime cette confiance.":"Excellente réponse.<br>C'est exactement ce que répond quelqu'un qui est curieux.";showEl($("#g2"))})});
+$("#sec").addEventListener("click",function(){showEl($("#sect"))});
+$("#nc").addEventListener("click",function(){showEl($("#nct"))});
+
+/* Calendrier */
+$("#wd").innerHTML=["L","M","M","J","V","S","D"].map(function(d){return"<span>"+d+"</span>"}).join("");
+function drawCal(){var g=$("#cg");g.innerHTML="";
+ $("#mt").textContent=new Date(viewY,viewM,1).toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+ $("#pm").disabled=(viewY===2026&&viewM===10);
+ var off=(new Date(viewY,viewM,1).getDay()+6)%7,dim=new Date(viewY,viewM+1,0).getDate(),i;
+ for(i=0;i<off;i++)g.appendChild(document.createElement("i"));
+ for(i=1;i<=dim;i++){(function(day){var d=new Date(viewY,viewM,day),b=document.createElement("button");b.type="button";b.textContent=day;
+  b.setAttribute("aria-label",fmtDate(d));
+  if(d<MIN){b.disabled=true}else{if(S.date&&+S.date===+d)b.className="sel";
+   b.addEventListener("click",function(){S.date=d;$$("#cg button").forEach(function(x){x.classList.remove("sel")});b.className="sel";burstEl(b);$("#dv").textContent=fmtDate(d);showEl($("#da"));$("#da").scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})})}
+  g.appendChild(b)})(i)}}
+$("#pm").addEventListener("click",function(){if(--viewM<0){viewM=11;viewY--}drawCal()});
+$("#nm").addEventListener("click",function(){if(++viewM>11){viewM=0;viewY++}drawCal()});
+
+/* Lieu */
+function syncPlace(){$$(".chip").forEach(function(c){c.classList.toggle("sel",!ownMode&&c.dataset.p===S.place&&!!S.place)});
+ $("#ownw").classList.toggle("hid",!ownMode);$("#ownb").classList.toggle("sel",ownMode);
+ $("#pnext").disabled=!S.place.trim()}
+$$(".chip").forEach(function(c){c.addEventListener("click",function(){if(c.dataset.own){setOwn();return}ownMode=false;S.place=c.dataset.p;syncPlace()})});
+function setOwn(){ownMode=true;S.place=$("#oin").value;syncPlace();$("#oin").focus()}
+$("#ownb").addEventListener("click",setOwn);
+$("#oin").addEventListener("input",function(){S.place=this.value;$("#pnext").disabled=!S.place.trim()});
+
+/* Heure */
+var tk="";for(var q=0;q<12;q++){var a=q*30*Math.PI/180;tk+='<line x1="'+(100+80*Math.sin(a)).toFixed(1)+'" y1="'+(100-80*Math.cos(a)).toFixed(1)+'" x2="'+(100+88*Math.sin(a)).toFixed(1)+'" y2="'+(100-88*Math.cos(a)).toFixed(1)+'" stroke-width="2"/>'}
+$("#tk").innerHTML=tk;
+function clock(t){var h=0,m=0;if(t){var p=t.split(":");h=+p[0];m=+p[1]}
+ $("#hh").setAttribute("transform","rotate("+((h%12)*30+m/2)+" 100 100)");$("#mh").setAttribute("transform","rotate("+(m*6)+" 100 100)")}
+function onTime(){S.time=this.value;clock(S.time);if(S.time)showEl($("#ta"));else $("#ta").classList.add("hid")}
+$("#tin").addEventListener("input",onTime);$("#tin").addEventListener("change",onTime);
+
+/* Question finale */
+$("#qq").addEventListener("click",function(){this.classList.add("hid");showEl($("#q1"))});
+$("#think").addEventListener("click",function(){$("#q1").classList.add("hid");showEl($("#q2"))});
+function accept(b){$("#q1").classList.add("hid");$("#q2").classList.add("hid");showEl($("#q3"));burstEl($("#q3"));setTimeout(function(){burst(W*.25,H*.4);burst(W*.75,H*.35)},350)}
+$("#yes").addEventListener("click",accept);$("#yes2").addEventListener("click",accept);
+
+/* Anniversaire */
+$("#blow").addEventListener("click",function(){$("#fl").classList.add("out");showEl($("#wish"));burstEl($("#fl"))});
+$("#replay").addEventListener("click",function(){initAudio();bday()});
+
+/* Final */
+$("#save").addEventListener("click",function(){go(13)});
+$("#copy").addEventListener("click",function(){var txt="INVITATION ACCEPTÉE\n\n"+summary(),m=$("#cmsg");
+ function fb(){var r=document.createRange();r.selectNodeContents($("#sum"));var s=getSelection();s.removeAllRanges();s.addRange(r);var ok=false;try{ok=document.execCommand("copy")}catch(e){}
+  m.textContent=ok?"Résumé copié. Tu peux me l'envoyer.":"Le texte est sélectionné : copie-le, puis envoie-le moi."}
+ if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(function(){m.textContent="Résumé copié. Tu peux me l'envoyer."},fb)}else fb()});
+
+go(0,false);
+})();
+</script>
+</body>
+</html>
